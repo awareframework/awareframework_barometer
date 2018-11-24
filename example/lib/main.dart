@@ -26,6 +26,8 @@ class _MyAppState extends State<MyApp> {
 
     sensor = new BarometerSensor(config);
 
+    sensor.start();
+
   }
 
   @override
@@ -37,7 +39,7 @@ class _MyAppState extends State<MyApp> {
           appBar: new AppBar(
             title: const Text('Plugin Example App'),
           ),
-          body: new BarometerCard(sensor: sensor,)
+          body: new BarometerCard(sensor: sensor, height: 100.0,)
       ),
     );
   }

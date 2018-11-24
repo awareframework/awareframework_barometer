@@ -31,11 +31,9 @@ public class SwiftAwareframeworkBarometerPlugin: AwareFlutterPluginCore, Flutter
     }
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        // add own channel
-        super.setChannels(with: registrar,
-                          instance: SwiftAwareframeworkBarometerPlugin(),
-                          methodChannelName: "awareframework_barometer/method",
-                          eventChannelName: "awareframework_barometer/event")
+        let instance = SwiftAwareframeworkBarometerPlugin();
+        super.setMethodChannel(with: registrar, instance: instance, channelName: "awareframework_barometer/method")
+        super.setEventChannels(with: registrar, instance: instance, channelNames:[ "awareframework_barometer/event"])
 
     }
 
