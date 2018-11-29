@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:awareframework_core/awareframework_core.dart';
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 /// init sensor
 class BarometerSensor extends AwareSensorCore {
@@ -13,26 +12,35 @@ class BarometerSensor extends AwareSensorCore {
   /// Init Barometer Sensor with BarometerSensorConfig
   BarometerSensor(BarometerSensorConfig config):this.convenience(config);
   BarometerSensor.convenience(config) : super(config){
-    /// Set sensor method & event channels
     super.setMethodChannel(_barometerMethod);
   }
 
   /// A sensor observer instance
-  Stream<Map<String,dynamic>> onDataChanged(String id) {
-     return super.getBroadcastStream(_barometerStream, "on_data_changed", id).map((dynamic event) => Map<String,dynamic>.from(event));
+  Stream<Map<String,dynamic>> get onDataChanged {
+     return super.getBroadcastStream(
+         _barometerStream, "on_data_changed"
+     ).map( (dynamic event) => Map<String,dynamic>.from(event) );
+  }
+
+  @override
+  void cancelAllEventChannels() {
+    super.cancelBroadcastStream("on_data_changed");
   }
 }
 
 class BarometerSensorConfig extends AwareSensorConfig{
   BarometerSensorConfig();
 
-  /// TODO
-  double frequency = 5.0;
+  int frequency = 5;
+  double period = 1;
+  double threshold = 0.0;
 
   @override
   Map<String, dynamic> toMap() {
     var map = super.toMap();
     map['frequency'] = frequency;
+    map['period']    = period;
+    map['threshold'] = threshold;
     return map;
   }
 }
@@ -40,14 +48,16 @@ class BarometerSensorConfig extends AwareSensorConfig{
 /// Make an AwareWidget
 class BarometerCard extends StatefulWidget {
   BarometerCard({Key key, @required this.sensor,
-                                    this.cardId="barometer_card_id",
-                                    this.height=250.0,
+                                    this.height = 250.0,
                                     this.bufferSize = 299}) : super(key: key);
 
-  BarometerSensor sensor;
-  String cardId;
-  double height;
-  int bufferSize;
+  final BarometerSensor sensor;
+  final double height;
+  final int bufferSize;
+
+  final List<LineSeriesData> dataLine1 = List<LineSeriesData>();
+  final List<LineSeriesData> dataLine2 = List<LineSeriesData>();
+  final List<LineSeriesData> dataLine3 = List<LineSeriesData>();
 
   @override
   BarometerCardState createState() => new BarometerCardState();
@@ -56,20 +66,21 @@ class BarometerCard extends StatefulWidget {
 
 class BarometerCardState extends State<BarometerCard> {
 
-  List<LineSeriesData> dataLine1 = List<LineSeriesData>();
-  List<LineSeriesData> dataLine2 = List<LineSeriesData>();
-  List<LineSeriesData> dataLine3 = List<LineSeriesData>();
-
   @override
   void initState() {
 
     super.initState();
     // set observer
-    widget.sensor.onDataChanged(widget.cardId).listen((event) {
+    widget.sensor.onDataChanged.listen((event) {
       setState((){
         if(event!=null){
           DateTime.fromMicrosecondsSinceEpoch(event['timestamp']);
-          StreamLineSeriesChart.add(data:event['pressure'], into:dataLine1, id:"barometer", buffer: widget.bufferSize);
+          StreamLineSeriesChart.add(
+              data:   event['pressure'],
+              into:   widget.dataLine1,
+              id:     "barometer",
+              buffer: widget.bufferSize
+          );
         }
       });
     }, onError: (dynamic error) {
@@ -78,14 +89,18 @@ class BarometerCardState extends State<BarometerCard> {
     print(widget.sensor);
   }
 
-
   @override
   Widget build(BuildContext context) {
+    var data = StreamLineSeriesChart.createTimeSeriesData(
+        widget.dataLine1,
+        widget.dataLine2,
+        widget.dataLine3
+    );
     return new AwareCard(
       contentWidget: SizedBox(
           height:widget.height,
           width: MediaQuery.of(context).size.width*0.8,
-          child: new StreamLineSeriesChart(StreamLineSeriesChart.createTimeSeriesData(dataLine1, dataLine2, dataLine3) ),
+          child: new StreamLineSeriesChart(data),
         ),
       title: "Barometer",
       sensor: widget.sensor
@@ -94,8 +109,7 @@ class BarometerCardState extends State<BarometerCard> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    widget.sensor.cancelBroadcastStream(widget.cardId);
+    widget.sensor.cancelAllEventChannels();
     super.dispose();
   }
 
