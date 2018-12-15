@@ -31,7 +31,7 @@ public class SwiftAwareframeworkBarometerPlugin: AwareFlutterPluginCore, Flutter
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = SwiftAwareframeworkBarometerPlugin();
         super.setMethodChannel(with: registrar, instance: instance, channelName: "awareframework_barometer/method")
-        super.setEventChannels(with: registrar, instance: instance, channelNames:[ "awareframework_barometer/event"])
+        super.setEventChannels(with: registrar, instance: instance, channelNames:[ "awareframework_barometer/event","awareframework_barometer/event_on_data_changed"])
 
     }
 

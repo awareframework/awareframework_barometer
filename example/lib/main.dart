@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
     config = BarometerSensorConfig()
       ..debug = true;
 
-    sensor = new BarometerSensor(config);
+    sensor = new BarometerSensor.init(config);
 
     sensor.start();
 

@@ -1,6 +1,9 @@
 # Aware Barometer
 
-TODO
+[![Build Status](https://travis-ci.org/awareframework/awareframework_barometer.svg?branch=master)](https://travis-ci.org/awareframework/awareframework_barometer)
+
+The barometer sensor measures the ambient air pressure. Barometer can be leveraged to detect and predict short team
+changes in weather, for example drops in pressure indicate rain, while raises indicate good weather ahead.
 
 ## Install the plugin into project
 1. Edit `pubspec.yaml`
@@ -16,7 +19,7 @@ import 'package:awareframework_core/awareframework_core.dart';
 ```
 
 ## Public functions
-### barometer Sensor
+### Barometer Sensor
 - `start()`
 - `stop()` 
 - `sync(force: Boolean)`
@@ -52,12 +55,12 @@ var config = BarometerSensorConfig()
 // init sensor
 var sensor = new BarometerSensor(config);
 
-void mathod(){
+void method(){
     /// start 
     sensor.start();
     
     /// set observer
-    sensor.onDataChanged.listen((Map<String,dynamic> result){
+    sensor.onDataChanged.listen((BarometerData result){
       setState((){
         // Your code here
       });
