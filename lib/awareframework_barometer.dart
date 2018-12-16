@@ -51,7 +51,7 @@ import 'package:flutter/material.dart';
 ///
 class BarometerSensor extends AwareSensor {
   static const MethodChannel _barometerMethod = const MethodChannel('awareframework_barometer/method');
-  static const EventChannel  _barometerStream  = const EventChannel('awareframework_barometer/event');
+//  static const EventChannel  _barometerStream  = const EventChannel('awareframework_barometer/event');
   static const EventChannel  _onDataChangedStream  = const EventChannel('awareframework_barometer/event_on_data_changed');
 
   BarometerData data = BarometerData();

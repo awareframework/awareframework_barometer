@@ -22,10 +22,11 @@ import 'package:awareframework_core/awareframework_core.dart';
 ### Barometer Sensor
 - `start()`
 - `stop()` 
-- `sync(force: Boolean)`
+- `sync(bool force)`
 - `enable()`
 - `disable()`
 - `isEnable()`
+- `setLabel(String label)`
 
 ### Configuration Keys
 TODO
@@ -53,7 +54,7 @@ var config = BarometerSensorConfig()
   ..label = "label";
 
 // init sensor
-var sensor = new BarometerSensor(config);
+var sensor = new BarometerSensor.init(config);
 
 void method(){
     /// start 
