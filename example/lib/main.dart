@@ -9,33 +9,32 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  BarometerSensor sensor;
-  BarometerSensorConfig config;
+  BarometerSensor? sensor;
+  BarometerSensorConfig? config;
 
   @override
   void initState() {
     super.initState();
 
-    config = BarometerSensorConfig()
-      ..debug = true;
+    config = BarometerSensorConfig()..debug = true;
+    config?.frequency = 1;
+    config?.period = 0.1;
 
-    sensor = new BarometerSensor.init(config);
+    sensor = new BarometerSensor.init(config!);
+    sensor?.onDataChanged.listen((data) {
+      print(data);
+    });
 
-    sensor.start();
-
+    sensor?.start();
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     return new MaterialApp(
       home: new Scaffold(
-          appBar: new AppBar(
-            title: const Text('Plugin Example App'),
-          ),
-          body: new BarometerCard(sensor: sensor, height: 100.0,)
+        appBar: new AppBar(
+          title: const Text('Plugin Example App'),
+        ),
       ),
     );
   }

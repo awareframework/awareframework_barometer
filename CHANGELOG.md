@@ -1,3 +1,5 @@
-## 0.0.1
+## 0.7.0
+* Supported awareframework_core 0.7
 
+## 0.0.1
 * TODO: Describe initial release.

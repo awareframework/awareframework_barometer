@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:awareframework_core/awareframework_core.dart';
-import 'package:flutter/material.dart';
 
 /// This is an Aware Framework plugin for monitoring motion activities.
 /// This package allows us to monitor motion activity data such as running,
@@ -50,19 +49,22 @@ import 'package:flutter/material.dart';
 /// ```
 ///
 class BarometerSensor extends AwareSensor {
-  static const MethodChannel _barometerMethod = const MethodChannel('awareframework_barometer/method');
+  static const MethodChannel _barometerMethod =
+      const MethodChannel('awareframework_barometer/method');
 //  static const EventChannel  _barometerStream  = const EventChannel('awareframework_barometer/event');
-  static const EventChannel  _onDataChangedStream  = const EventChannel('awareframework_barometer/event_on_data_changed');
+  static const EventChannel _onDataChangedStream =
+      const EventChannel('awareframework_barometer/event_on_data_changed');
 
   BarometerData data = BarometerData();
-  static StreamController<BarometerData> streamController = StreamController<BarometerData>();
+  static StreamController<BarometerData> streamController =
+      StreamController<BarometerData>();
 
   /// Init  Barometer Sensor without a configuration file
   ///
   /// ```dart
   /// var sensor = BarometerSensor();
   /// ```
-  BarometerSensor():this.init(null);
+  BarometerSensor() : super(null);
 
   /// Init  Barometer Sensor with  BarometerSensorConfig
   ///
@@ -74,7 +76,7 @@ class BarometerSensor extends AwareSensor {
   ///
   /// var sensor =  BarometerSensor.init(config);
   /// ```
-  BarometerSensor.init(BarometerSensorConfig config) : super(config){
+  BarometerSensor.init(BarometerSensorConfig config) : super(config) {
     super.setMethodChannel(_barometerMethod);
   }
 
@@ -97,10 +99,12 @@ class BarometerSensor extends AwareSensor {
   @override
   Future<Null> start() {
     // set a stream channel
-    super.getBroadcastStream(_onDataChangedStream, "on_data_changed").map(
-            (dynamic event) => BarometerData.from(Map<String,dynamic>.from(event))
-    ).listen((event){
-      if(!streamController.isClosed){
+    super
+        .getBroadcastStream(_onDataChangedStream, "on_data_changed")
+        .map((dynamic event) =>
+            BarometerData.from(Map<String, dynamic>.from(event)))
+        .listen((event) {
+      if (!streamController.isClosed) {
         streamController.add(event);
       }
     });
@@ -126,7 +130,7 @@ class BarometerSensor extends AwareSensor {
 /// config
 ///   ..debug = true
 /// ``
-class BarometerSensorConfig extends AwareSensorConfig{
+class BarometerSensorConfig extends AwareSensorConfig {
   BarometerSensorConfig();
 
   int frequency = 5;
@@ -137,7 +141,7 @@ class BarometerSensorConfig extends AwareSensorConfig{
   Map<String, dynamic> toMap() {
     var map = super.toMap();
     map['frequency'] = frequency;
-    map['period']    = period;
+    map['period'] = period;
     map['threshold'] = threshold;
     return map;
   }
@@ -151,87 +155,11 @@ class BarometerSensorConfig extends AwareSensorConfig{
 class BarometerData extends AwareData {
   double pressure = 0.0;
   int eventTimestamp = 0;
-  BarometerData():this.from(null);
-  BarometerData.from(Map<String,dynamic> data):super.from(data){
-    if(data!=null){
+  BarometerData() : this.from({});
+  BarometerData.from(Map<String, dynamic>? data) : super(data ?? {}) {
+    if (data != null) {
       pressure = data["pressure"] ?? 0.0;
       eventTimestamp = data["eventTimestamp"] ?? 0;
     }
-  }
-}
-
-///
-/// A Card Widget of Barometer Sensor
-///
-/// You can generate a Cart Widget by following code.
-/// ```dart
-/// var card = BarometerCard(sensor: sensor);
-/// ```
-class BarometerCard extends StatefulWidget {
-  BarometerCard({Key key, @required this.sensor,
-                                    this.height = 250.0,
-                                    this.bufferSize = 299}) : super(key: key);
-
-  final BarometerSensor sensor;
-  final double height;
-  final int bufferSize;
-
-  final List<LineSeriesData> dataLine1 = List<LineSeriesData>();
-  final List<LineSeriesData> dataLine2 = List<LineSeriesData>();
-  final List<LineSeriesData> dataLine3 = List<LineSeriesData>();
-
-  @override
-  BarometerCardState createState() => new BarometerCardState();
-}
-
-
-class BarometerCardState extends State<BarometerCard> {
-
-  @override
-  void initState() {
-
-    super.initState();
-    // set observer
-    widget.sensor.onDataChanged.listen((event) {
-      if(event!=null){
-        DateTime.fromMicrosecondsSinceEpoch(event.timestamp);
-        if(mounted){
-          setState((){
-            updateContent(event);
-          });
-        }else{
-          updateContent(event);
-        }
-      }
-
-
-    }, onError: (dynamic error) {
-        print('Received error: ${error.message}');
-    });
-    print(widget.sensor);
-  }
-
-  void updateContent(BarometerData data){
-    StreamLineSeriesChart.add(
-        data:data.pressure, into:widget.dataLine1, id:"barometer",buffer:widget.bufferSize
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var data = StreamLineSeriesChart.createTimeSeriesData(
-        widget.dataLine1,
-        widget.dataLine2,
-        widget.dataLine3
-    );
-    return new AwareCard(
-      contentWidget: SizedBox(
-          height:widget.height,
-          width: MediaQuery.of(context).size.width*0.8,
-          child: new StreamLineSeriesChart(data),
-        ),
-      title: "Barometer",
-      sensor: widget.sensor
-    );
   }
 }

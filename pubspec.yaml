@@ -1,16 +1,15 @@
 name: awareframework_barometer
 description: The barometer sensor measures the ambient air pressure.
-version: 0.0.4
-author: AWARE Mobile Context Instrumentation Middleware Framework <yuuki.nishiyama@oulu.fi>
+version: 0.7.0
 homepage: http://www.awareframework.com
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  awareframework_core: ^0.1.1
+  awareframework_core: ^0.7.0
 
 dev_dependencies:
   flutter_test:
