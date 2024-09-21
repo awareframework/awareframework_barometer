@@ -1,5 +1,8 @@
+## 0.7.1
+* Fix a minor issue
+
 ## 0.7.0
-* Supported awareframework_core 0.7
+* Support awareframework_core 0.7
 
 ## 0.0.1
 * TODO: Describe initial release.

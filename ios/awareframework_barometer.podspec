@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'awareframework_barometer'
-  s.version = '0.7.0'
+  s.version = '0.7.1'
   s.summary          = 'A new flutter plugin project.'
   s.description      = <<-DESC
 A new flutter plugin project.
@@ -16,7 +16,7 @@ A new flutter plugin project.
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.dependency 'awareframework_core'
-  s.dependency 'com.awareframework.ios.sensor.barometer','~>0.7.0'
+  s.dependency 'com.awareframework.ios.sensor.barometer','~>0.7'
 
   s.ios.deployment_target = '13.0'
 end

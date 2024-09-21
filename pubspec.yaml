@@ -1,10 +1,11 @@
 name: awareframework_barometer
 description: The barometer sensor measures the ambient air pressure.
-version: 0.7.0
+version: 0.7.1
 homepage: http://www.awareframework.com
 
 environment:
   sdk: ">=2.12.0 <4.0.0"
+  flutter: ">=1.10.0"
 
 dependencies:
   flutter:
@@ -20,10 +21,19 @@ dev_dependencies:
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+# flutter:
+#   plugin:
+#     androidPackage: com.awareframework.barometer.awareframeworkbarometer
+#     pluginClass: AwareframeworkBarometerPlugin
+
 flutter:
   plugin:
-    androidPackage: com.awareframework.barometer.awareframeworkbarometer
-    pluginClass: AwareframeworkBarometerPlugin
+    platforms:
+      android:
+        package: com.awareframework.barometer.awareframeworkbarometer
+        pluginClass: AwareframeworkBarometerPlugin
+      ios:
+        pluginClass: AwareframeworkBarometerPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
